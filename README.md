@@ -12,13 +12,12 @@ Este projeto é uma aplicação web simples para cadastro de produtos, desenvolv
 ## Estrutura do Projeto
 
 Cadastro_Produtos/  
-| ├── docs/  
-| │   ├── pages/  
-| │   │   └── index.html  
+| ├── src/  
 | │   ├── script/  
 | │   │   └── script.js  
 | │   └── style/  
 | │       └── style.css  
+| ├── index.html  
 | └── README.md 
 
 ## Tecnologias Utilizadas
