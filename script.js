@@ -3,11 +3,12 @@ let nomeProduto = document.getElementById('nome');
 let valorProduto = document.getElementById('valor');
 let quantidadeProduto = document.getElementById('qtd');
 let imgProduto = document.getElementById('img');
+let conteudoTabela = document.getElementById('conteudoTabela');
 let produtos = [];
 let id = 1;
 
 // Função para validar os dados do formulário
-function validarDados() {
+function validarDados(event) { 
     event.preventDefault(); // Previne a atualização da página
 
     const campos = [nomeProduto, valorProduto, quantidadeProduto, imgProduto];
@@ -27,64 +28,55 @@ function validarDados() {
 
 // Função para cadastrar um novo produto
 function cadastrarProdutos() {
-    // Verifica se todos os campos estão preenchidos
-    if (nomeProduto.value && valorProduto.value && quantidadeProduto.value && imgProduto.value) {
-        // Adiciona o novo produto ao array de produtos
-        produtos.push({
-            id: id, 
-            nome: nomeProduto.value, 
-            valProduto: valorProduto.value, 
-            qtdProduto: quantidadeProduto.value, 
-            img: imgProduto.value
-        })  
-        
-        id++; // Incrementa o ID para o próximo produto
+    let valor = Number(valorProduto.value.replace(',', '.')); // Permite decimais
+    let quantidade = Number(quantidadeProduto.value); 
 
-    } else {
-        ''; // Caso algum campo não esteja preenchido, não faz nada
+    // Verifica se os campos foram preenchidos corretamente
+    if (nomeProduto.value && !isNaN(valor) && !isNaN(quantidade) && imgProduto.value) {
+        produtos.push({
+            id: id++, 
+            nome: nomeProduto.value, 
+            valProduto: valor, 
+            qtdProduto: quantidade, 
+            img: imgProduto.value
+        });  
+
+        renderProdutos(); // Atualiza a tabela de produtos
     }
-    
-    renderProdutos(); // Atualiza a tabela de produtos
 }
 
 // Função para renderizar a tabela de produtos
 function renderProdutos() {
-    // Se não houver produtos, reseta o ID e o array de produtos
-    if (produtos.length === 0) {
-        id = 1;
-        produtos = [];
-    }
-
-    conteudoTabela.innerHTML = ``; // Limpa o conteúdo da tabela
+    conteudoTabela.innerHTML = ''; // Limpa a tabela
     produtos.forEach((item) => { 
-        // Adiciona cada produto à tabela
         conteudoTabela.innerHTML += `
         <tr id="linha-${item.id}">
-        <td>${item.id}</td>
-        <td>${item.nome}</td>
-        <td>${item.valProduto}</td>
-        <td>${item.qtdProduto}</td>
-        <td><img style="width: 25px; height: 25px" src="${item.img}"></td>
-        <td>
-            <button onclick="editProduto(${item.id})" type="button" class="btn btn-warning">Update</button>
-            <button onclick="excluirProduto(${item.id})" type="button" class="btn btn-danger">Excluir</button>
-        </td>
-       </tr>
-    `;
+            <td>${item.id}</td>
+            <td>${item.nome}</td>
+            <td>${item.valProduto.toFixed(2)}</td>
+            <td>${item.qtdProduto}</td>
+            <td><img style="width: 25px; height: 25px" src="${item.img}"></td>
+            <td>
+                <button onclick="editProduto(${item.id})" type="button" class="btn btn-warning">Update</button>
+                <button onclick="excluirProduto(${item.id})" type="button" class="btn btn-danger">Excluir</button>
+            </td>
+        </tr>`;
     });
 }
 
 // Função para editar um produto existente
 function editProduto(id) {
-    // Atualiza o produto com os novos valores do formulário
+    let valor = Number(valorProduto.value.replace(',', '.')); // Permite decimais
+    let quantidade = Number(quantidadeProduto.value);
+
     produtos = produtos.map((item) => {
         if (item.id === id) {
             return {
                 id: id,
                 nome: nomeProduto.value,
-                valProduto: valorProduto.value,
-                qtdProduto: quantidadeProduto.value,
-                img: imgProduto.value,
+                valProduto: !isNaN(valor) ? valor : item.valProduto,
+                qtdProduto: !isNaN(quantidade) ? quantidade : item.qtdProduto,
+                img: imgProduto.value || item.img,
             };
         }
         return item; 
@@ -97,13 +89,10 @@ function editProduto(id) {
 function excluirProduto(id) {
     window.alert("Deletando produto...");
 
-    // Filtra o array de produtos para remover o produto com o ID especificado
     produtos = produtos.filter((item) => item.id !== id);
 
     const linha = document.getElementById(`linha-${id}`);
     if (linha) {
-        linha.remove(); // Remove a linha da tabela correspondente ao produto excluído
+        linha.remove(); // Remove a linha da tabela
     }
-
-    renderProdutos(); // Atualiza a tabela de produtos
 }

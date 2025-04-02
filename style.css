@@ -1,22 +1,18 @@
 /* Estilos personalizados para tornar o site mais responsivo */
-@media (max-width: 768px) {
-    table thead {
-        display: none;
-    }
+body {
+    background-color: #212529;
+    color: #fff
+}
 
-    table, table tbody, table tr, table td {
-        display: block;
-        width: 100%;
-    }
+table tbody tr td {
+    align-content: center;
+}
+
+@media (max-width: 768px) {
+
 
     table tr {
         margin-bottom: 15px;
-    }
-
-    table td {
-        text-align: right;
-        padding-left: 50%;
-        position: relative;
     }
 
     table td::before {
